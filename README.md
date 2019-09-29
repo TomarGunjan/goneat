@@ -56,7 +56,22 @@ Service Details
     The userId is also returned in the headers
 
 
-3. City Services
+3. User Service
+    a) Get user by user id
+        GET Method
+          {{baseurl}}/user/{{userid}}
+
+          -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndW5qYW4yQGdtYWlsLmNvbSIsImV4cCI6MTU3MDYwMTM3MH0.uzl_MYSQHmyyKQ1MgoOlJNnyUd0wPSWVlDin4OgRzZ1u_v7Ae94A8-OPwVgZGHFfjTP25TETQIeGWAUFVt7gSg' \
+
+    b) Get all users
+        GET Method
+          {{baseurl}}/user?page=1&limit=10
+
+          -H 'Authorization: Bearer eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJndW5qYW4yQGdtYWlsLmNvbSIsImV4cCI6MTU3MDYwMTM3MH0.uzl_MYSQHmyyKQ1MgoOlJNnyUd0wPSWVlDin4OgRzZ1u_v7Ae94A8-OPwVgZGHFfjTP25TETQIeGWAUFVt7gSg' \
+        The results are paginated. If no value is provided for page and limit then by default 1st page with first 25 results will be shown.
+
+
+4. City Services
     a) City Creation
      A city can be created using following request
         POST Method
@@ -79,7 +94,7 @@ Service Details
 
 
 
-4. Restaurant Services
+5. Restaurant Services
     a) Restaurant Creation
     A restaurant can be created using following request with valid city id
     POST Method
@@ -107,7 +122,7 @@ Service Details
          The results are paginated. If no value is provided for page and limit then by default 1st page with first 25 results will be shown.
 
 
-4. Marking a restaurant favourite
+6. Marking a restaurant favourite
     A restaurant can be marked favourite using following request
     POST Method
       {{BaseUrl}}/restaurants/favourite/userId/F37${userId}
@@ -119,7 +134,7 @@ Service Details
      if a restaurant is marked as favourite again a message showing the same would returned
 
 
-5. Booking in a restaurant
+7. Booking in a restaurant
     A user can book a slot (1 slot in 1 hour) for duration of 1 hour for a mximum number of guests 20(customizable) using following request
     POST Method
       '{{BaseUrl}}/restaurants/booking?restId=1

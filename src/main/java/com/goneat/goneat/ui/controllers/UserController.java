@@ -38,17 +38,7 @@ public class UserController {
 		BeanUtils.copyProperties(returnDto, response);
 		return response;
 	}
-	
-	@GetMapping
-	public String getUser()
-	{
-		return "get user was called";
-	}
-	
-	@PostMapping("/favourite/userId/{userId}")
-	public FavouriteRestaurantResponseModel setFavouriteRestaurant(@PathVariable String userId, @RequestBody FavouriteRestaurantRequestModel details)
-	{
-		return userService.favouriteRestaurant(userId,details);
-	}
+
+
 
 }

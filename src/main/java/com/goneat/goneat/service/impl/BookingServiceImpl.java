@@ -53,6 +53,7 @@ public class BookingServiceImpl implements BookingService {
 	public BookedDetails booking(Long restId, BookingRequestModel bookingRequest)
 	{
 		BookedDetails response = new BookedDetails();
+		bookingRepository.markPastSlotsInactive();
 		boolean flag=false;
 		flag=checkRestaurantExists(restId);
 		if(!flag) throw new RestaurantsException(ErrorMessages.RESTAURANTNOTFOUND.getMessage());
@@ -70,7 +71,12 @@ public class BookingServiceImpl implements BookingService {
 		Timestamp stamp = localDateTimeAttributeConverter.convertToDatabaseColumn(formatDateTime);
         entity.setStartDateTime(stamp);
 		entity.setUserId(bookingRequest.getUserId());
-		String bookingId= utility.getUserId(8);
+		String bookingId= "";
+		while(true)
+		{
+			bookingId=utility.getUserId(8);
+			if(bookingRepository.findBybookingId(bookingId)==null) break;
+		}
 		entity.setBookingId(bookingId);
 		entity.setActivationStatus("active");
 		BookingEntity responseEntity = bookingRepository.save(entity);
@@ -92,6 +98,7 @@ public class BookingServiceImpl implements BookingService {
 		for(BookingEntity entity:currentBookings)
 		{
 			guests=guests+entity.getNumOfGuests();
+			if(entity.getUserId().equals(bookingRequest.getUserId())) throw new RestaurantsException("User Already has a booking in provided slot");
 		}
 		if(guests>guestCapacity) throw new BookingException(ErrorMessages.OUTOFCAPACITY.getMessage());
         return true;

@@ -3,8 +3,14 @@ package com.goneat.goneat.service.impl;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.goneat.goneat.exceptions.CityException;
+import com.goneat.goneat.exceptions.ErrorMessages;
+import com.goneat.goneat.ui.mode.request.RestaurantCreationModel;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.goneat.goneat.exceptions.RestaurantsException;
@@ -26,27 +32,6 @@ public class RestaurantServiceImpl implements RestaurantService{
 	RestaurantRepository restaurantRepository;
 	
 	
-	public RestaurantDetails getRestaurantFromCity(Long cityId)
-	{
-		if(cityRepository.findByCityId(cityId)==null)
-			throw new RestaurantsException("No City Found with given Id");
-		CityEntity entity=cityRepository.findByCityId(cityId);
-		String cityName = entity.getCityName();
-		List<RestaurantEntity> restEntities = restaurantRepository.findAllBycityId(cityId);
-		RestaurantDetails response = new RestaurantDetails();
-		response.setCityId(cityId);
-		response.setCityName(cityName);
-		List<Restaurant> list = new ArrayList();
-		for(RestaurantEntity restEnt:restEntities)
-		{
-			Restaurant rest = new Restaurant();
-			BeanUtils.copyProperties(restEnt, rest);
-			list.add(rest);
-		}
-		response.setRestaurants(list);
-		return response;
-	}
-
 
 	@Override
 	public RestaurantEntity getRestaurantFromRestaurantId(Long restId) {
@@ -55,9 +40,13 @@ public class RestaurantServiceImpl implements RestaurantService{
 
 
 	@Override
-	public List<Restaurant> searchRestaurantByName(Long cityId, String keyword) {
+	public List<Restaurant> searchRestaurantByName(Long cityId, String keyword, int page, int limit) {
+
+		if(page>0) page=page-1;
+		Pageable pageRequest = PageRequest.of(page, limit);
 		RestaurantDetails response = new RestaurantDetails();
-		List<RestaurantEntity> restaurants =  restaurantRepository.findByRestaurantName(Long.toString(cityId),keyword);
+		Page<RestaurantEntity> pages =  restaurantRepository.findByRestaurantName(Long.toString(cityId),keyword,pageRequest);
+		List<RestaurantEntity> restaurants = pages.getContent();
 		List<Restaurant> list = new ArrayList();
 		for(RestaurantEntity restEnt:restaurants)
 		{
@@ -66,6 +55,29 @@ public class RestaurantServiceImpl implements RestaurantService{
 			list.add(rest);
 		}
 		return list;
+	}
+
+	@Override
+	public Restaurant createRestaurant(RestaurantCreationModel model)
+	{
+		List<RestaurantEntity> restaurants = restaurantRepository.findAllBycityId(model.getCityId());
+		List<String> restName = new ArrayList<>();
+		restaurants.stream().map(x->x.getRestaurantName()).forEach(y->restName.add(y));
+		if(restName.contains(model.getRestaurantName()))
+		{
+			throw new RestaurantsException("Restaurant already exists in city with same name");
+		}
+		if(cityRepository.findByCityId(model.getCityId())==null)
+		{
+			throw new CityException(ErrorMessages.CITYDOESNOTEXIST.getMessage());
+		}
+		RestaurantEntity entity = new RestaurantEntity();
+		entity.setCityId(model.getCityId());
+		entity.setRestaurantName(model.getRestaurantName());
+		RestaurantEntity responseEntity = restaurantRepository.save(entity);
+		Restaurant restaurant = new Restaurant();
+		BeanUtils.copyProperties(responseEntity,restaurant);
+		return restaurant;
 	}
 
 }

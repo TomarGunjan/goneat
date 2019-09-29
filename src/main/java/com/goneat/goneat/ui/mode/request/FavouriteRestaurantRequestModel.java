@@ -4,13 +4,13 @@ import java.util.List;
 
 public class FavouriteRestaurantRequestModel {
 	
-	private List<Long> restaurantIds;
+	private Long restaurantIds;
 
-	public List<Long> getRestaurantIds() {
+	public Long getRestaurantIds() {
 		return restaurantIds;
 	}
 
-	public void setRestaurantIds(List<Long> restaurantIds) {
+	public void setRestaurantIds(Long restaurantIds) {
 		this.restaurantIds = restaurantIds;
 	}
 

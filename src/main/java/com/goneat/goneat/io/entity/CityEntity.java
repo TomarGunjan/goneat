@@ -1,14 +1,12 @@
 package com.goneat.goneat.io.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name="city")
 public class CityEntity {
 	
 	@Id
-	@Column
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	private Long cityId;
 	
 	@Column

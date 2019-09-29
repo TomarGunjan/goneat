@@ -64,29 +64,7 @@ public class UserServiceImpl implements UserService{
 		return returnDto;
 	}
 
-	@Override
-	public FavouriteRestaurantResponseModel favouriteRestaurant( String userId, FavouriteRestaurantRequestModel model) {
-		if(userRepository.findByUserId(userId)==null)
-			throw new UserServiceException("User Not found");
-		FavouriteRestaurantResponseModel responseModel = new FavouriteRestaurantResponseModel();
-		UserEntity entity = userRepository.findByUserId(userId);
-		List<Long> restaurants =model.getRestaurantIds();
-		List<Long> addedRest = new ArrayList();
-		for(Long restId:restaurants)
-		{
-			RestaurantEntity restDetail = restaurantService.getRestaurantFromRestaurantId(restId);
-			if(restDetail!=null)
-			{
-				FavouriteRestaurantEntity favEntity = new FavouriteRestaurantEntity();
-				favEntity.setRestaurantId(restId);
-				favEntity.setUserId(userId);
-				favRestRepo.save(favEntity);
-				addedRest.add(restId);
-			}
-		}
-		responseModel.setFavouriterestaurant(addedRest);
-		return responseModel;
-	}
+
 
 	@Override
 	public UserDto findUserByUserId(String userId) {

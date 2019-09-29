@@ -3,14 +3,13 @@ package com.goneat.goneat.ui.mode.response;
 import java.util.List;
 
 public class FavouriteRestaurantResponseModel {
-	private List<Long> favouriterestaurant;
+	private OperationStatusResponseModel status;
 
-	public List<Long> getFavouriterestaurant() {
-		return favouriterestaurant;
+	public OperationStatusResponseModel getStatus() {
+		return status;
 	}
 
-	public void setFavouriterestaurant(List<Long> favouriterestaurant) {
-		this.favouriterestaurant = favouriterestaurant;
+	public void setStatus(OperationStatusResponseModel status) {
+		this.status = status;
 	}
-
 }

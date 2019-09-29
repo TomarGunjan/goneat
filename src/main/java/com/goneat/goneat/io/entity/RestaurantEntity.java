@@ -1,16 +1,15 @@
 package com.goneat.goneat.io.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 
-
-@Entity(name="restaurants")
+@Entity
+@Table(name="restaurants",
+		indexes = {@Index(name="my_index_1", columnList = "cityId")})
 public class RestaurantEntity {
 	
 	@Id
-	@Column
+	@GeneratedValue(strategy= GenerationType.AUTO)
 	private long restaurantId;
 	@Column
 	private String restaurantName;

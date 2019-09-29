@@ -1,21 +1,20 @@
 package com.goneat.goneat.io.entity;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.GeneratedValue;
-import javax.persistence.Id;
+import javax.persistence.*;
 
 @Entity(name="favouriteRestaurant")
+@Table(name="booking",
+		indexes = {@Index(name="my_index_1", columnList = "restaurantId")})
 public class FavouriteRestaurantEntity {
 
 	@Id
 	@GeneratedValue
 	private Long id;
 	
-	@Column(nullable=false)
+	@Column(name="userId",nullable=false)
 	private String userId;
 	
-	@Column(nullable=false)
+	@Column(name="restaurantId",nullable=false)
 	private Long restaurantId;
 	
 
